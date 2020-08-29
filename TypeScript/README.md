@@ -15,7 +15,7 @@ In terminal execute following commands:
 `npm run start` or `yarn run start` - to use the gilded rose for your needs modifying `golden-master-text-test.ts`
 
 
-##Explanations
+## Explanations
 
 * Not altering Item class I understand as not changing its interface. But logically adding code to the class is
 normal thing so my preferred solution is in `gilded-rose-altered-item.ts` file.
