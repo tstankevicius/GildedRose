@@ -1,6 +1,6 @@
 import {Constants} from './constants';
-import {ITEM_QUALITY_TYPES, QUALITY_TYPES} from './model/enums';
-import {Item} from './model/item';
+import {QUALITY_TYPES} from './model/enums';
+import {Item} from './model/item-altered';
 
 export class GildedRose {
   items: Array<Item>;
@@ -23,16 +23,16 @@ export class GildedRose {
 
   private updateItemQuality(item: Item): number {
     let quality = item.quality;
-    if (this.itemQualityTypeIs(QUALITY_TYPES.FIXED, item.name)) {
+    if(item.hasQualityType(QUALITY_TYPES.FIXED)) {
       return quality;
     }
-    if (this.itemQualityTypeIs(QUALITY_TYPES.EXPIRES, item.name) && this.sellDatePassedFor(item)) {
+    if(item.hasQualityType(QUALITY_TYPES.EXPIRES) && item.sellDatePassed) {
       return 0;
     }
-    if (this.itemQualityTypeIs(QUALITY_TYPES.REGULAR, item.name)) {
+    if (item.hasQualityType(QUALITY_TYPES.REGULAR)) {
       quality = this.decreaseItemQuality(quality, item);
     }
-    if (this.itemQualityTypeIs(QUALITY_TYPES.IMPROVES, item.name)) {
+    if (item.hasQualityType(QUALITY_TYPES.IMPROVES)) {
       quality = this.increaseItemQuality(quality, item);
     }
     quality = quality > Constants.MAX_QUALITY ? Constants.MAX_QUALITY : quality;
@@ -40,27 +40,11 @@ export class GildedRose {
     return quality;
   }
 
-  private sellDatePassedFor(item: Item): boolean {
-    return item.sellIn < 0;
-  }
-
-  private itemQualityTypeIs(qualityType: QUALITY_TYPES, itemName: string): boolean {
-    return ITEM_QUALITY_TYPES[qualityType.toUpperCase()].includes(itemName);
-  }
-
-  private itemReachedDoubleQualityDate(item: Item): boolean {
-    return item.sellIn < Constants.DOUBLE_QUALITY_DAYS_LIMIT;
-  }
-
-  private itemReachedTripleQualityDate(item: Item): boolean {
-    return item.sellIn < Constants.TRIPLE_QUALITY_DAYS_LIMIT;
-  }
-
   private increaseItemQuality(quality: number, item: Item): number {
     quality++;
-    if (this.itemQualityTypeIs(QUALITY_TYPES.IMPROVES_DOUBLE, item.name) && this.itemReachedDoubleQualityDate(item)) {
+    if (item.hasQualityType(QUALITY_TYPES.IMPROVES_DOUBLE) && item.hasReachedDoubleQualityDate) {
       quality++;
-      if (this.itemQualityTypeIs(QUALITY_TYPES.IMPROVES_TRIPLE, item.name) && this.itemReachedTripleQualityDate(item)) {
+      if (item.hasQualityType(QUALITY_TYPES.IMPROVES_TRIPLE) && item.hasReachedTripleQualityDate) {
         quality++;
       }
     }
@@ -69,7 +53,7 @@ export class GildedRose {
 
   private decreaseItemQuality(quality: number, item: Item): number {
     quality = this.decreaseQualityCycle(quality, item);
-    if (this.sellDatePassedFor(item)) {
+    if (item.sellDatePassed) {
       quality = this.decreaseQualityCycle(quality, item);
     }
     return quality;
@@ -77,7 +61,7 @@ export class GildedRose {
 
   private decreaseQualityCycle(quality: number, item: Item): number {
     quality--;
-    if (this.itemQualityTypeIs(QUALITY_TYPES.CONJURED, item.name)) {
+    if(item.hasQualityType(QUALITY_TYPES.CONJURED)) {
       quality--;
     }
     return quality;

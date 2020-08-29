@@ -1,0 +1,6 @@
+export const Constants = {
+  MAX_QUALITY: 50,
+  MIN_QUALITY: 0,
+  DOUBLE_QUALITY_DAYS_LIMIT: 10,
+  TRIPLE_QUALITY_DAYS_LIMIT: 5
+};
