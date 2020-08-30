@@ -26,3 +26,8 @@ normal thing so my preferred solution is in `gilded-rose-altered-item.ts` file.
 this case is still ok in updateQuality method, but if requirements expand and we have more cases 
 we would need to map item to quality update strategy and use dependency injection to set correct strategy 
 for qualityCalculator service to calculate quality. 
+
+* Another approach would be to use RxJS and make array of item a stream and calculate quality manipulating
+stream. Then, however, golden-master would need to subscribe to result observable to print results. Reactive
+implementation would only fit if other system elements would also use reactive approach. This would improve
+performance though would make code less readable and comprehensive.
