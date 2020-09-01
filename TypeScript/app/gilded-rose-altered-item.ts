@@ -29,10 +29,10 @@ export class GildedRose {
     if(item.hasQualityType(QUALITY_TYPES.EXPIRES) && item.sellDatePassed) {
       return 0;
     }
-    if (item.hasQualityType(QUALITY_TYPES.REGULAR)) {
+    if (item.hasQualityType(QUALITY_TYPES.REGULAR) && quality > Constants.MIN_QUALITY) {
       quality = this.decreaseItemQuality(quality, item);
     }
-    if (item.hasQualityType(QUALITY_TYPES.IMPROVES)) {
+    if (item.hasQualityType(QUALITY_TYPES.IMPROVES) && quality < Constants.MAX_QUALITY) {
       quality = this.increaseItemQuality(quality, item);
     }
     quality = quality > Constants.MAX_QUALITY ? Constants.MAX_QUALITY : quality;
